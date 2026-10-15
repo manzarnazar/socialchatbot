@@ -1,0 +1,10 @@
+.git
+.gitignore
+.DS_Store
+*.md
+!DOCKER_DEPLOYMENT.md
+!README.md
+scratch/
+.system_generated/
+build_output.log
+npm-debug.log

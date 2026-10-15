@@ -1,0 +1,16 @@
+{
+  "name": "baileys-worker",
+  "version": "1.0.0",
+  "description": "Unofficial WhatsApp Baileys Worker pool for WhatsOmni",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.5.0",
+    "express": "^4.19.2",
+    "node-fetch": "^2.7.0",
+    "pino": "^9.1.0",
+    "qrcode": "^1.5.4"
+  }
+}

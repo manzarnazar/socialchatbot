@@ -1,0 +1,300 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-app-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-app-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  /* WhatsOmni Theme Custom Mappings */
+  --color-zinc-955: #0A0A0A;
+  --color-zinc-655: #52525B;
+  --color-red-650: #dc2626;
+  --color-red-750: #b91c1c;
+  --color-red-755: #991b1b;
+  --color-bg-root: var(--bg-root);
+  --color-bg-card-hover: var(--bg-card-hover);
+  --color-bg-badge: var(--bg-badge);
+  --color-fg-primary: var(--fg-primary);
+  --color-fg-secondary: var(--fg-secondary);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-inverse: var(--fg-inverse);
+  --color-accent-green: var(--accent-green);
+  --color-accent-green-2: var(--accent-green-2);
+  --color-accent-green-bg: var(--accent-green-bg);
+  --color-accent-green-glow: var(--accent-green-glow);
+  --color-border-strong: var(--border-strong);
+  --color-border-focus: var(--border-focus);
+  --color-chart-bar: var(--chart-bar);
+  --color-chart-bar-active: var(--chart-bar-active);
+  --color-chart-line: var(--chart-line);
+  --color-chart-line-2: var(--chart-line-2);
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+}
+
+:root {
+  --font-app-sans: var(--font-plus-jakarta-sans);
+  --bg-root: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #FAFAFA;
+  --bg-sidebar: #FFFFFF;
+  --bg-input: #F5F5F5;
+  --bg-badge: #F0F0EE;
+
+  --fg-primary: #0A0A0A;
+  --fg-secondary: #6B6B6B;
+  --fg-muted: #A0A0A0;
+  --fg-inverse: #FFFFFF;
+
+  --accent-green: #4AE54A;
+  --accent-green-2: #3DD43D;
+  --accent-green-bg: #E8FDE8;
+  --accent-green-glow: rgba(74, 229, 74, 0.25);
+
+  --border-strong: #D0D0CE;
+  --border-focus: #0A0A0A;
+
+  --chart-bar: #D4D4D4;
+  --chart-bar-active: #0A0A0A;
+  --chart-line: #0A0A0A;
+  --chart-line-2: #4AE54A;
+
+  /* shadcn variables mappings */
+  --background: var(--bg-root);
+  --foreground: var(--fg-primary);
+  --card: var(--bg-card);
+  --card-foreground: var(--fg-primary);
+  --popover: var(--bg-card);
+  --popover-foreground: var(--fg-primary);
+  --primary: var(--accent-green);
+  --primary-foreground: var(--fg-primary);
+  --secondary: var(--bg-badge);
+  --secondary-foreground: var(--fg-secondary);
+  --muted: var(--bg-badge);
+  --muted-foreground: var(--fg-muted);
+  --accent: var(--bg-card-hover);
+  --accent-foreground: var(--fg-primary);
+  --destructive: #FF4444;
+  --destructive-foreground: var(--fg-inverse);
+  --border: #E8E8E6;
+  --input: var(--bg-input);
+  --ring: var(--border-focus);
+  --radius: 6px;
+
+  --sidebar: var(--bg-sidebar);
+  --sidebar-foreground: var(--fg-primary);
+  --sidebar-primary: var(--fg-primary);
+  --sidebar-primary-foreground: var(--fg-inverse);
+  --sidebar-accent: var(--bg-card-hover);
+  --sidebar-accent-foreground: var(--fg-primary);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--border-focus);
+}
+
+.dark {
+  --bg-root: #111110;
+  --bg-card: #1A1A18;
+  --bg-card-hover: #1F1F1D;
+  --bg-sidebar: #1A1A18;
+  --bg-input: #2A2A28;
+  --bg-badge: #252523;
+
+  --fg-primary: #F4F4F2;
+  --fg-secondary: #8A8A88;
+  --fg-muted: #6A6A68;
+  --fg-inverse: #111110;
+
+  --accent-green: #4AE54A;
+  --accent-green-2: #3DD43D;
+  --accent-green-bg: #1A3A1A;
+  --accent-green-glow: rgba(74, 229, 74, 0.20);
+
+  --border-strong: #3A3A38;
+  --border-focus: #F4F4F2;
+
+  --chart-bar: #3A3A38;
+  --chart-bar-active: #F4F4F2;
+  --chart-line: #F4F4F2;
+  --chart-line-2: #4AE54A;
+
+  /* shadcn variables mappings */
+  --background: var(--bg-root);
+  --foreground: var(--fg-primary);
+  --card: var(--bg-card);
+  --card-foreground: var(--fg-primary);
+  --popover: var(--bg-card);
+  --popover-foreground: var(--fg-primary);
+  --primary: var(--accent-green);
+  --primary-foreground: var(--fg-inverse);
+  --secondary: var(--bg-badge);
+  --secondary-foreground: var(--fg-secondary);
+  --muted: var(--bg-badge);
+  --muted-foreground: var(--fg-muted);
+  --accent: var(--bg-card-hover);
+  --accent-foreground: var(--fg-primary);
+  --destructive: #FF4444;
+  --destructive-foreground: var(--fg-inverse);
+  --border: #2A2A28;
+  --input: var(--bg-input);
+  --ring: var(--border-focus);
+
+  --sidebar: var(--bg-sidebar);
+  --sidebar-foreground: var(--fg-primary);
+  --sidebar-primary: var(--fg-primary);
+  --sidebar-primary-foreground: var(--fg-inverse);
+  --sidebar-accent: var(--bg-card-hover);
+  --sidebar-accent-foreground: var(--fg-primary);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--border-focus);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+  /* Suppress browser native password reveal & auto-fill icons to prevent duplicate eye buttons */
+  input[type="password"]::-ms-reveal,
+  input[type="password"]::-ms-clear,
+  input[type="password"]::-webkit-contacts-auto-fill-button,
+  input[type="password"]::-webkit-credentials-auto-fill-button {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes modalEntry {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes drawerEntry {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes backdropFade {
+  from { opacity: 0; backdrop-filter: blur(0px); background-color: rgba(0, 0, 0, 0); }
+  to { opacity: 1; backdrop-filter: blur(4px); background-color: rgba(0, 0, 0, 0.4); }
+}
+
+@keyframes borderRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-modal-entry {
+  animation: modalEntry 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-drawer-entry {
+  animation: drawerEntry 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-backdrop-fade {
+  animation: backdropFade 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-border-rotate {
+  animation: borderRotate 3.5s linear infinite;
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #E8E8E6 transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #E8E8E6;
+  border-radius: 9999px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #D1D1CF;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

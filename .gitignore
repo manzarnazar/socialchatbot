@@ -1,0 +1,48 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+!.env.docker.example
+**/.env
+!**/.env.example
+
+# Dependencies
+node_modules/
+vendor/
+
+# Build / cache
+.next/
+out/
+dist/
+build/
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Laravel runtime
+backend/storage/logs/*.log
+backend/storage/framework/cache/data/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/bootstrap/cache/*.php
+!backend/bootstrap/cache/.gitignore
+
+# Baileys sessions
+baileys-worker/storage/sessions/*
+!baileys-worker/storage/sessions/.gitignore
+
+# Certs / local SSL
+docker/nginx/ssl/*.pem
+docker/nginx/ssl/*.key
+docker/nginx/ssl/*.crt
+!docker/nginx/ssl/.gitkeep

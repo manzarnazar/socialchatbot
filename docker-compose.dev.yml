@@ -1,0 +1,375 @@
+# WhatsOmni Local Development Docker Compose Configuration
+name: whatsomni-dev
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: whatsomni_dev_nginx
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+        reservations:
+          cpus: '0.1'
+          memory: 32M
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx/default.dev.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./backend/storage/app/public:/var/www/html/storage/app/public:ro
+    depends_on:
+      - frontend
+      - backend
+      - reverb
+    networks:
+      - whatsomni_dev_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    image: whatsomni_dev_frontend:latest
+    container_name: whatsomni_dev_frontend
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1024M
+        reservations:
+          cpus: '0.2'
+          memory: 256M
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_BACKEND_URL=http://localhost
+      - NEXT_PUBLIC_REVERB_APP_KEY=whatsomni_reverb_key
+      - NEXT_PUBLIC_REVERB_HOST=localhost
+      - NEXT_PUBLIC_REVERB_PORT=80
+      - NEXT_PUBLIC_REVERB_SCHEME=http
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+      - frontend_next_cache:/app/.next
+    depends_on:
+      - backend
+    networks:
+      - whatsomni_dev_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: whatsomni_dev_backend:latest
+    container_name: whatsomni_dev_backend
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 512M
+        reservations:
+          cpus: '0.2'
+          memory: 128M
+    environment:
+      - CONTAINER_ROLE=app
+      - RUN_MIGRATIONS=true
+      - CACHE_ON_STARTUP=false
+      - APP_NAME=WhatsOmni
+      - APP_ENV=local
+      - APP_KEY=${APP_KEY:-base64:7B5Y+m8Vp2Vv9dD5QhJ9M4W1xZ3vK2nL6sY4wP8tQ0r=}
+      - APP_DEBUG=true
+      - APP_URL=http://localhost
+      - FRONTEND_URL=http://localhost
+      - SANCTUM_STATEFUL_DOMAINS=localhost,127.0.0.1
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=whatsomni
+      - DB_USERNAME=whatsomni
+      - DB_PASSWORD=whatsomni_secret
+      - QUEUE_CONNECTION=redis
+      - CACHE_STORE=redis
+      - SESSION_DRIVER=redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - BROADCAST_CONNECTION=reverb
+      - REVERB_APP_ID=whatsomni_reverb_id
+      - REVERB_APP_KEY=whatsomni_reverb_key
+      - REVERB_APP_SECRET=whatsomni_reverb_secret
+      - REVERB_HOST=localhost
+      - REVERB_PORT=80
+      - REVERB_SCHEME=http
+      - REVERB_SERVER_HOST=0.0.0.0
+      - REVERB_SERVER_PORT=8080
+      - BAILEYS_WORKER_URL=http://baileys:5006
+      - BAILEYS_SECRET_TOKEN=whatsomni_baileys_secret_key
+      - SCOUT_DRIVER=collection
+    volumes:
+      - ./backend:/var/www/html
+      - /var/www/html/vendor
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - whatsomni_dev_network
+
+  queue:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: whatsomni_dev_backend:latest
+    container_name: whatsomni_dev_queue
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    environment:
+      - CONTAINER_ROLE=queue
+      - APP_NAME=WhatsOmni
+      - APP_ENV=local
+      - APP_KEY=${APP_KEY:-base64:7B5Y+m8Vp2Vv9dD5QhJ9M4W1xZ3vK2nL6sY4wP8tQ0r=}
+      - APP_DEBUG=true
+      - APP_URL=http://localhost
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=whatsomni
+      - DB_USERNAME=whatsomni
+      - DB_PASSWORD=whatsomni_secret
+      - QUEUE_CONNECTION=redis
+      - CACHE_STORE=redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - BROADCAST_CONNECTION=reverb
+      - REVERB_APP_ID=whatsomni_reverb_id
+      - REVERB_APP_KEY=whatsomni_reverb_key
+      - REVERB_APP_SECRET=whatsomni_reverb_secret
+      - REVERB_HOST=localhost
+      - REVERB_PORT=80
+      - REVERB_SCHEME=http
+      - BAILEYS_WORKER_URL=http://baileys:5006
+      - BAILEYS_SECRET_TOKEN=whatsomni_baileys_secret_key
+      - SCOUT_DRIVER=collection
+    volumes:
+      - ./backend:/var/www/html
+      - /var/www/html/vendor
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - whatsomni_dev_network
+
+  reverb:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: whatsomni_dev_backend:latest
+    container_name: whatsomni_dev_reverb
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    environment:
+      - CONTAINER_ROLE=reverb
+      - APP_NAME=WhatsOmni
+      - APP_ENV=local
+      - APP_KEY=${APP_KEY:-base64:7B5Y+m8Vp2Vv9dD5QhJ9M4W1xZ3vK2nL6sY4wP8tQ0r=}
+      - APP_DEBUG=true
+      - APP_URL=http://localhost
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=whatsomni
+      - DB_USERNAME=whatsomni
+      - DB_PASSWORD=whatsomni_secret
+      - QUEUE_CONNECTION=redis
+      - CACHE_STORE=redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - BROADCAST_CONNECTION=reverb
+      - REVERB_APP_ID=whatsomni_reverb_id
+      - REVERB_APP_KEY=whatsomni_reverb_key
+      - REVERB_APP_SECRET=whatsomni_reverb_secret
+      - REVERB_HOST=localhost
+      - REVERB_PORT=80
+      - REVERB_SCHEME=http
+      - REVERB_SERVER_HOST=0.0.0.0
+      - REVERB_SERVER_PORT=8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/var/www/html
+      - /var/www/html/vendor
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - whatsomni_dev_network
+
+  scheduler:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: whatsomni_dev_backend:latest
+    container_name: whatsomni_dev_scheduler
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+        reservations:
+          cpus: '0.05'
+          memory: 32M
+    environment:
+      - CONTAINER_ROLE=scheduler
+      - APP_NAME=WhatsOmni
+      - APP_ENV=local
+      - APP_KEY=${APP_KEY:-base64:7B5Y+m8Vp2Vv9dD5QhJ9M4W1xZ3vK2nL6sY4wP8tQ0r=}
+      - APP_DEBUG=true
+      - APP_URL=http://localhost
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=whatsomni
+      - DB_USERNAME=whatsomni
+      - DB_PASSWORD=whatsomni_secret
+      - QUEUE_CONNECTION=redis
+      - CACHE_STORE=redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SCOUT_DRIVER=collection
+    volumes:
+      - ./backend:/var/www/html
+      - /var/www/html/vendor
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - whatsomni_dev_network
+
+  baileys:
+    build:
+      context: ./baileys-worker
+      dockerfile: Dockerfile
+    image: whatsomni_dev_baileys:latest
+    container_name: whatsomni_dev_baileys
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.8'
+          memory: 384M
+        reservations:
+          cpus: '0.1'
+          memory: 96M
+    environment:
+      - PORT=5006
+      - LARAVEL_API_URL=http://nginx:80
+      - BAILEYS_SECRET_TOKEN=whatsomni_baileys_secret_key
+    ports:
+      - "5006:5006"
+    volumes:
+      - ./baileys-worker:/app
+      - ./baileys-worker/storage/sessions:/app/storage/sessions
+    depends_on:
+      - backend
+    networks:
+      - whatsomni_dev_network
+
+  mysql:
+    image: mysql:8.0
+    container_name: whatsomni_dev_mysql
+    restart: unless-stopped
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --performance-schema=OFF
+      --innodb-buffer-pool-size=128M
+      --innodb-log-buffer-size=16M
+      --innodb-flush-log-at-trx-commit=2
+      --max-connections=100
+      --table-open-cache=400
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 512M
+        reservations:
+          cpus: '0.2'
+          memory: 128M
+    environment:
+      MYSQL_DATABASE: whatsomni
+      MYSQL_USER: whatsomni
+      MYSQL_PASSWORD: whatsomni_secret
+      MYSQL_ROOT_PASSWORD: root_secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - dev_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u whatsomni -pwhatsomni_secret || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    networks:
+      - whatsomni_dev_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: whatsomni_dev_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+        reservations:
+          cpus: '0.05'
+          memory: 32M
+    ports:
+      - "6379:6379"
+    volumes:
+      - dev_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - whatsomni_dev_network
+
+volumes:
+  dev_mysql_data:
+  dev_redis_data:
+  frontend_node_modules:
+  frontend_next_cache:
+
+networks:
+  whatsomni_dev_network:
+    driver: bridge
